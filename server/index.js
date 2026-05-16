@@ -199,7 +199,7 @@ function extractAndLogLead(response, userMessage) {
 
 // ─── Chat Endpoint — with prompt caching ─────────────────────────────────────
 
-app.post("/api/chat", async (req, res) => {
+app.post("/tanmay-ai/chat", async (req, res) => {
   const { messages } = req.body;
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: "messages array required" });
@@ -255,7 +255,7 @@ app.post("/api/chat", async (req, res) => {
 
 // ─── Status Endpoint ──────────────────────────────────────────────────────────
 
-app.get("/api/status", (req, res) => {
+app.get("/tanmay-ai/status", (req, res) => {
   const rawFiles = fs.existsSync(WIKI_DIR)
     ? fs.readdirSync(WIKI_DIR).filter(f => f.endsWith(".md") && f !== "compiled_wiki.md")
     : [];
@@ -268,7 +268,7 @@ app.get("/api/status", (req, res) => {
 
 // ─── Leads Endpoint ───────────────────────────────────────────────────────────
 
-app.get("/api/leads", (req, res) => {
+app.get("/tanmay-ai/leads", (req, res) => {
   if (!fs.existsSync(LEADS_FILE)) return res.json({ leads: [] });
   const lines = fs.readFileSync(LEADS_FILE, "utf-8").trim().split("\n").filter(Boolean);
   res.json({ leads: lines.map(l => JSON.parse(l)).reverse() });
@@ -276,7 +276,7 @@ app.get("/api/leads", (req, res) => {
 
 // ─── Health ───────────────────────────────────────────────────────────────────
 
-app.get("/api/health", (req, res) => {
+app.get("/tanmay-ai/health", (req, res) => {
   res.json({ status: "ok", compilationStatus });
 });
 

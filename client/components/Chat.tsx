@@ -92,7 +92,7 @@ export default function Chat() {
 
   useEffect(()=>{
     const poll = async()=>{
-      try { const r=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/status`); if(r.ok) setStatus(await r.json()); } catch{}
+      try { const r=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/status`); if(r.ok) setStatus(await r.json()); } catch{}
     };
     poll();
     const id=setInterval(poll,3000);
@@ -114,7 +114,7 @@ export default function Chat() {
     setStreamText("");
 
     try {
-      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`,{
+      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`,{
         method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({messages:next.map(m=>({role:m.role,content:m.content}))}),
       });
