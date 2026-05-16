@@ -134,7 +134,7 @@ export default function Chat() {
       }
       setMessages(prev=>[...prev,{role:"assistant",content:acc,id:(Date.now()+1).toString()}]);
     } catch {
-      setMessages(prev=>[...prev,{role:"assistant",content:"Something went wrong. Make sure the backend is running on port 3001.",id:(Date.now()+1).toString()}]);
+      setMessages(prev=>[...prev,{role:"assistant",content:"Something went wrong connecting to the server. Please try again.",id:(Date.now()+1).toString()}]);
     } finally {
       setStreaming(false);
       setStreamText("");

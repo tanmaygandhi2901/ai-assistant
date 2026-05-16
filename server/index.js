@@ -220,13 +220,7 @@ app.post("/tanmay-ai/chat", async (req, res) => {
     const stream = await client.messages.stream({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: [
-        {
-          type: "text",
-          text: buildSystemPrompt(),
-          cache_control: { type: "ephemeral" },
-        },
-      ],
+      system: buildSystemPrompt(),
       messages: messages.map(m => ({ role: m.role, content: m.content })),
     });
 
