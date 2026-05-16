@@ -21,9 +21,9 @@ app.use(cors({
 }));
 app.use(express.json());
 
-const WIKI_DIR = path.resolve(__dirname, "../wiki");
-const COMPILED_WIKI_PATH = path.resolve(__dirname, "../wiki/compiled_wiki.md");
-const LEADS_FILE = path.resolve(__dirname, "../leads.jsonl");
+const WIKI_DIR = path.resolve(__dirname, "./wiki");
+const COMPILED_WIKI_PATH = path.resolve(__dirname, "./wiki/compiled_wiki.md");
+const LEADS_FILE = path.resolve(__dirname, "./leads.jsonl");
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
