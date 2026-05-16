@@ -146,6 +146,9 @@ ${rawContent}`;
   } catch (err) {
     compilationStatus = { state: "error", error: err.message, filesCompiled: [], lastCompiled: null };
     console.error("❌ Wiki compilation failed:", err.message);
+    console.error("❌ Full error:", JSON.stringify(err, null, 2));
+    console.error("❌ API Key present:", !!process.env.ANTHROPIC_API_KEY);
+    console.error("❌ API Key prefix:", process.env.ANTHROPIC_API_KEY?.slice(0, 10));
   }
 }
 
