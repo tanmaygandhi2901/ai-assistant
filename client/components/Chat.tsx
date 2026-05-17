@@ -188,7 +188,7 @@ export default function Chat() {
             <Avatar size={42} glow />
             <div>
               <div style={{fontWeight:600,fontSize:14,letterSpacing:"-0.02em"}}>Tanmay Gandhi</div>
-              <div style={{fontSize:11,color:"var(--text-2)",marginTop:2,fontFamily:"var(--mono)"}}>Tech Lead · 5.5y exp</div>
+              <div style={{fontSize:11,color:"var(--text-2)",marginTop:2,fontFamily:"var(--mono)"}}>Senior Software Developer · 5.5y exp</div>
             </div>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
