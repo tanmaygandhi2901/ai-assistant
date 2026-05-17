@@ -57,6 +57,10 @@ html, body, #__next { height: 100%; background: var(--bg); color: var(--text-1);
 .fade-up     { animation: fadeUp 0.2s ease both; }
 .cursor      { display:inline-block; width:2px; height:1em; background:var(--accent); margin-left:1px; vertical-align:text-bottom; animation:blink 0.75s step-end infinite; }
 .spin        { animation: spin 1s linear infinite; }
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  footer { padding-bottom: calc(14px + env(safe-area-inset-bottom)) !important; }
+}
+
 .shimmer-text {
   background: linear-gradient(90deg, var(--text-3) 0%, var(--text-2) 50%, var(--text-3) 100%);
   background-size: 200% auto;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Zap, CheckCircle2, ChevronRight } from "lucide-react";
+import { Send, Zap, CheckCircle2, ChevronRight, Menu, X } from "lucide-react";
 
 interface Message { role: "user"|"assistant"; content: string; id: string; }
 interface CompStatus { state:"idle"|"compiling"|"ready"|"error"; lastCompiled:string|null; filesCompiled:string[]; error:string|null; }
@@ -10,8 +10,7 @@ interface Status { compilation: CompStatus; rawFiles: string[]; compiledExists: 
 const SUGGESTIONS = [
   { label:"Who are you?", icon:"👋" },
   { label:"What's your strongest skill?", icon:"⚡" },
-  { label:"Tell me about AIRR.", icon:"🏗️" },
-  { label:"Are you open to work?", icon:"💼" },
+  { label:"Are you open for collaboration?", icon:"💼" },
   { label:"What are you building now?", icon:"🔨" },
   { label:"What makes you different?", icon:"🎯" },
 ];
@@ -87,8 +86,17 @@ export default function Chat() {
   const [streaming,setStreaming] = useState(false);
   const [streamText,setStreamText] = useState("");
   const [status,setStatus] = useState<Status|null>(null);
+  const [isMobile,setIsMobile] = useState(false);
+  const [sidebarOpen,setSidebarOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(()=>{
+    const check=()=>setIsMobile(window.innerWidth<=768);
+    check();
+    window.addEventListener("resize",check);
+    return ()=>window.removeEventListener("resize",check);
+  },[]);
 
   useEffect(()=>{
     const poll = async()=>{
@@ -153,11 +161,29 @@ export default function Chat() {
   return (
     <div style={{display:"flex",height:"100vh",background:"var(--bg)",overflow:"hidden"}}>
 
+      {/* ── Mobile overlay backdrop ── */}
+      {isMobile && sidebarOpen && (
+        <div onClick={()=>setSidebarOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:40}} />
+      )}
+
       {/* ── Sidebar ── */}
-      <aside style={{width:272,flexShrink:0,borderRight:"1px solid var(--border)",background:"var(--bg-2)",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+      <aside style={{
+        width:272,flexShrink:0,borderRight:"1px solid var(--border)",background:"var(--bg-2)",
+        display:"flex",flexDirection:"column",overflow:"hidden",
+        ...(isMobile ? {
+          position:"fixed",top:0,left:0,height:"100%",zIndex:50,
+          transform:sidebarOpen?"translateX(0)":"translateX(-100%)",
+          transition:"transform 0.25s ease",
+        } : {}),
+      }}>
 
         {/* Profile */}
         <div style={{padding:"24px 18px 18px",borderBottom:"1px solid var(--border)"}}>
+          {isMobile && (
+            <button onClick={()=>setSidebarOpen(false)} style={{marginBottom:12,background:"transparent",border:"none",cursor:"pointer",color:"var(--text-3)",display:"flex",alignItems:"center",gap:4,padding:0,fontSize:11,fontFamily:"var(--mono)"}}>
+              <X size={13} /> close
+            </button>
+          )}
           <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
             <Avatar size={42} glow />
             <div>
@@ -197,7 +223,7 @@ export default function Chat() {
         <div style={{padding:"14px 18px",flex:1,overflowY:"auto"}}>
           <div style={{fontSize:10,color:"var(--text-3)",fontFamily:"var(--mono)",letterSpacing:"0.08em",marginBottom:8,textTransform:"uppercase"}}>Ask me</div>
           {SUGGESTIONS.map(s=>(
-            <button key={s.label} onClick={()=>sendMessage(s.label)}
+            <button key={s.label} onClick={()=>{sendMessage(s.label);setSidebarOpen(false);}}
               style={{display:"flex",alignItems:"center",gap:8,padding:"7px 8px",borderRadius:7,background:"transparent",border:"1px solid transparent",cursor:"pointer",textAlign:"left",color:"var(--text-2)",fontSize:12,fontFamily:"var(--font)",width:"100%",marginBottom:2,transition:"all 0.12s"}}
               onMouseEnter={e=>{(e.currentTarget as HTMLButtonElement).style.cssText+="background:var(--bg-3);border-color:var(--border-md);color:var(--text-1);"}}
               onMouseLeave={e=>{(e.currentTarget as HTMLButtonElement).style.cssText+="background:transparent;border-color:transparent;color:var(--text-2);"}}
@@ -232,33 +258,38 @@ export default function Chat() {
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
 
         {/* Header */}
-        <header style={{padding:"13px 22px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid var(--border)",background:"var(--bg-2)",flexShrink:0}}>
+        <header style={{padding:`13px ${isMobile?"14px":"22px"}`,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid var(--border)",background:"var(--bg-2)",flexShrink:0}}>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
+            {isMobile && (
+              <button onClick={()=>setSidebarOpen(true)} style={{background:"transparent",border:"none",cursor:"pointer",color:"var(--text-2)",display:"flex",alignItems:"center",padding:0,marginRight:2}}>
+                <Menu size={18} />
+              </button>
+            )}
             <Zap size={13} color="var(--accent)" />
             <span style={{fontSize:13,fontWeight:500}}>Tanmay Gandhi AI</span>
-            <span style={{fontSize:11,color:"var(--text-3)",fontFamily:"var(--mono)"}}>· LLM Wiki + Prompt Cache</span>
+            {!isMobile && <span style={{fontSize:11,color:"var(--text-3)",fontFamily:"var(--mono)"}}>· LLM Wiki + Prompt Cache</span>}
           </div>
           <StatusBadge status={status} />
         </header>
 
         {/* Compiling banner */}
         {isCompiling && (
-          <div style={{padding:"7px 22px",background:"var(--accent-dim)",borderBottom:"1px solid rgba(200,241,53,0.12)",display:"flex",alignItems:"center",gap:7,fontSize:11,color:"var(--accent)",fontFamily:"var(--mono)",flexShrink:0}}>
+          <div style={{padding:`7px ${isMobile?"14px":"22px"}`,background:"var(--accent-dim)",borderBottom:"1px solid rgba(200,241,53,0.12)",display:"flex",alignItems:"center",gap:7,fontSize:11,color:"var(--accent)",fontFamily:"var(--mono)",flexShrink:0}}>
             <span style={{width:10,height:10,border:"1.5px solid var(--accent-dim)",borderTopColor:"var(--accent)",borderRadius:"50%",animation:"spin 1s linear infinite",display:"inline-block",flexShrink:0}} />
             LLM is synthesizing wiki from {status?.rawFiles.length ?? 0} source files — compiles once, cached for all queries after.
           </div>
         )}
 
         {/* Messages */}
-        <main style={{flex:1,overflowY:"auto",padding:"24px 22px"}}>
-          <div style={{maxWidth:660,margin:"0 auto",display:"flex",flexDirection:"column",gap:14}}>
+        <main style={{flex:1,overflowY:"auto",padding:isMobile?"16px 12px":"24px 22px"}}>
+          <div style={{maxWidth:isMobile?"100%":660,margin:"0 auto",display:"flex",flexDirection:"column",gap:14}}>
             {isEmpty ? (
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"60vh",textAlign:"center",gap:0}}>
                 <Avatar size={60} glow />
-                <div style={{marginTop:18,fontSize:20,fontWeight:600,letterSpacing:"-0.03em"}}>
+                <div style={{marginTop:18,fontSize:isMobile?17:20,fontWeight:600,letterSpacing:"-0.03em"}}>
                   {isCompiling ? "Compiling knowledge..." : "Hey, I'm Tanmay's AI."}
                 </div>
-                <div style={{marginTop:8,fontSize:13,color:"var(--text-2)",maxWidth:360,lineHeight:1.7}}>
+                <div style={{marginTop:8,fontSize:13,color:"var(--text-2)",maxWidth:360,lineHeight:1.7,padding:isMobile?"0 8px":0}}>
                   {isCompiling
                     ? "The LLM is synthesizing the wiki right now. This happens once on startup and whenever files change."
                     : "Ask me anything about Tanmay — skills, projects, experience, or what he's building. I'll answer as him."}
@@ -282,8 +313,8 @@ export default function Chat() {
         </main>
 
         {/* Input */}
-        <footer style={{padding:"14px 22px",borderTop:"1px solid var(--border)",background:"var(--bg-2)",flexShrink:0}}>
-          <div style={{maxWidth:660,margin:"0 auto"}}>
+        <footer style={{padding:isMobile?"10px 12px":"14px 22px",borderTop:"1px solid var(--border)",background:"var(--bg-2)",flexShrink:0}}>
+          <div style={{maxWidth:isMobile?"100%":660,margin:"0 auto"}}>
             <div style={{display:"flex",alignItems:"flex-end",gap:9,padding:"9px 12px",borderRadius:11,background:"var(--bg-3)",border:"1px solid var(--border-md)",transition:"border-color 0.15s"}}
               onFocus={e=>(e.currentTarget as HTMLDivElement).style.borderColor="rgba(200,241,53,0.25)"}
               onBlur={e=>(e.currentTarget as HTMLDivElement).style.borderColor="var(--border-md)"}
@@ -301,9 +332,11 @@ export default function Chat() {
                 <Send size={13} color={canSend?"#000":"var(--text-3)"} />
               </button>
             </div>
-            <div style={{marginTop:7,textAlign:"center",fontSize:10,color:"var(--text-3)",fontFamily:"var(--mono)"}}>
-              wiki compiled once · prompt cached · not re-processed per request · @tanmaygandhi.builds
-            </div>
+            {!isMobile && (
+              <div style={{marginTop:7,textAlign:"center",fontSize:10,color:"var(--text-3)",fontFamily:"var(--mono)"}}>
+                wiki compiled once · prompt cached · not re-processed per request · @tanmaygandhi.builds
+              </div>
+            )}
           </div>
         </footer>
       </div>
