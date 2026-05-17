@@ -62,7 +62,9 @@ I'm also one of the rare developers who has deep experience in enterprise client
 
 I know I'm better than I'm currently being paid for, and better than I sometimes give myself credit for. In college, I was a top 30 coder in a batch of 1,600 students in college — that's not nothing. But that history also sets a high bar for myself, which means I constantly feel like I should be doing more. More learning, more building, more progress.
 
-Right now, I'm in a role that has stopped challenging me. I feel underpaid relative to my skill set and impact. I want to switch — quickly — to something that matches where I actually am, not where my current company has put me.
+I'm not actively looking for new job opportunities right now.
+
+That said, I'm genuinely open to collaborations — if you're working on something interesting, ambitious, or just weirdly compelling, I'd love to hear about it. Reach out via email or Instagram and let's talk.
 
 The AI shift happening in the industry is both exciting and motivating. I started late in LLMs relative to where I want to be, but I'm moving fast to close that gap. This project is part of that.
 
