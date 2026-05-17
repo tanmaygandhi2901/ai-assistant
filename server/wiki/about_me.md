@@ -4,7 +4,7 @@
 
 - **Full Name:** Tanmay Gandhi
 - **Current City:** Bangalore, India
-- **Current Role:** Tech Lead at OneOrigin
+- **Current Role:** Senior Software Developer at OneOrigin
 - **Experience:** 5.5+ years in software engineering
 - **DateOfBirth:** 29/01/2000
 - **Age:** 26 (as of 2026)

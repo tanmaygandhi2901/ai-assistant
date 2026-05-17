@@ -5,7 +5,7 @@
 ---
 
 ## AIRR (v1 + v2) — OneOrigin
-**Role:** Tech Lead, Client Integration Lead, Core Backend Engineer
+**Role:** Senior Software Developer, Client Integration Lead, Core Backend Engineer
 **Status:** Production — actively maintained
 **Stack:** Next.js, Fastify, Node.js, TypeScript, MongoDB, Redis, AWS (Lambda, S3, EventBridge, CloudWatch), Cognito, Secrets Manager, ElasticSearch (v1)
 
